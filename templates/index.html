@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" href="/static/app.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero panel panel-hero">
+        <div class="hero-copy">
+          <p class="tag">Voice Operations Platform</p>
+          <h1>{{ app_name }}</h1>
+          <p class="lede">
+            A production-style voice operations console for modern support teams with live call simulation,
+            telephony webhooks, escalation logic, and grounded FAQ retrieval.
+          </p>
+          <div class="hero-actions">
+            <a class="button-link" href="#simulator">Launch Simulator</a>
+            <a class="button-link secondary-link" href="/webhooks/twilio/voice">View Twilio Entry Point</a>
+          </div>
+        </div>
+        <div class="hero-aside">
+          <div class="kpi-grid" id="kpi-grid">
+            <article class="kpi-card">
+              <span class="kpi-label">Active Sessions</span>
+              <strong id="kpi-active">0</strong>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-label">Voice Turns</span>
+              <strong id="kpi-turns">0</strong>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-label">Escalations</span>
+              <strong id="kpi-escalations">0</strong>
+            </article>
+            <article class="kpi-card">
+              <span class="kpi-label">Knowledge Articles</span>
+              <strong id="kpi-articles">0</strong>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <section class="panel simulator" id="simulator">
+          <div class="section-head">
+            <div>
+              <p class="section-tag">Operator Console</p>
+              <h2>Live Voice Simulator</h2>
+            </div>
+            <div class="session-chip" id="session-chip">No active session</div>
+          </div>
+
+          <div class="sim-grid">
+            <div class="sim-column">
+              <form id="session-form" class="stacked-form">
+                <label>
+                  Caller name
+                  <input id="caller-name" value="Ava Patel" />
+                </label>
+                <label>
+                  Phone number
+                  <input id="phone-number" value="+91 90000 10000" />
+                </label>
+                <button type="submit">Create Demo Session</button>
+              </form>
+              <p id="session-state" class="muted"></p>
+
+              <div class="prompt-bar">
+                <h3>Suggested Scenarios</h3>
+                <div class="prompt-grid">
+                  {% for prompt in starter_prompts %}
+                  <button class="prompt-pill" type="button" data-prompt="{{ prompt }}">{{ prompt }}</button>
+                  {% endfor %}
+                </div>
+              </div>
+
+              <form id="transcript-form" class="stacked-form">
+                <label>
+                  Caller transcript
+                  <textarea id="transcript" rows="6" placeholder="Describe what the caller says..."></textarea>
+                </label>
+                <button type="submit">Process Turn</button>
+              </form>
+            </div>
+
+            <div class="sim-column conversation-column">
+              <div class="conversation-header">
+                <div>
+                  <p class="section-tag">Response Engine</p>
+                  <h3>Conversation Timeline</h3>
+                </div>
+                <p id="meta" class="muted">Intent, sentiment, and escalation status will appear here.</p>
+              </div>
+
+              <div id="empty-state" class="empty-state">
+                Start a session, send a transcript, and this panel will render the agent response like a real support console.
+              </div>
+
+              <div id="response-panel" class="response hidden">
+                <div class="response-box">
+                  <h4>Latest Agent Response</h4>
+                  <pre id="response-text"></pre>
+                </div>
+
+                <div class="pill-row" id="sources"></div>
+
+                <div class="timeline" id="transcript-log"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="section-head">
+              <div>
+                <p class="section-tag">Ops View</p>
+                <h2>Recent Sessions</h2>
+              </div>
+              <button class="ghost-button" id="refresh-dashboard" type="button">Refresh</button>
+            </div>
+            <div id="recent-sessions" class="session-list"></div>
+          </section>
+
+          <section class="panel">
+            <p class="section-tag">Knowledge Base</p>
+            <h2>Grounding Sources</h2>
+            <div class="knowledge-list">
+              {% for article in articles %}
+              <article class="knowledge-card">
+                <span class="topic-badge">{{ article.topic }}</span>
+                <h3>{{ article.title }}</h3>
+                <p>{{ article.content.split('.')[0] }}.</p>
+              </article>
+              {% endfor %}
+            </div>
+          </section>
+
+          <section class="panel">
+            <p class="section-tag">Deployment Surface</p>
+            <h2>Production Hooks</h2>
+            <ul class="integration-list">
+              <li>Twilio-compatible inbound webhook flow</li>
+              <li>Mock-friendly STT/TTS path for local demos</li>
+              <li>Escalation decisions captured at the orchestration layer</li>
+              <li>Compatible with CRM, ticketing, and order-status adapters</li>
+            </ul>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
